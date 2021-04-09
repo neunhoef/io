@@ -53,6 +53,23 @@ jobs:
         with:
           NO_COVERAGE: ${{ matrix.NO_COVERAGE }}
 
+  test-cygwin:
+    name: "cygwin64 - GAP master - HPCGAP no"
+    if: ${{ !(github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository) }}
+    runs-on: windows-latest
+    steps:
+      - name: "Set git to use UNIX-style line endings"
+        run: |
+          git config --global core.autocrlf false
+          git config --global core.eol lf
+      - uses: actions/checkout@v2
+      - uses: gap-actions/setup-cygwin@master
+      - uses: wilfwilson/setup-gap@cygwin
+        with:
+          GAP_PKGS_TO_BUILD: ''
+      - uses: gap-actions/build-pkg@ww/cygwin
+      - uses: wilfwilson/run-pkg-tests@cygwin
+
   # The documentation job
   manual:
     name: Build manuals

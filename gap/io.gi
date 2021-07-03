@@ -167,7 +167,9 @@ InstallGlobalFunction(IO_File, function( arg )
       if fd = fail then return fail; fi;
       return IO_WrapFD(fd,false,bufsize);
   elif mode = "a" then
-      fd := IO_open(filename,IO.O_APPEND+IO.O_WRONLY,0);
+      fd := IO_open(filename,IO.O_CREAT+IO.O_WRONLY+IO.O_APPEND,
+                    IO.S_IRUSR+IO.S_IWUSR+IO.S_IRGRP+IO.S_IWGRP+
+                    IO.S_IROTH+IO.S_IWOTH);
       if fd = fail then return fail; fi;
       return IO_WrapFD(fd,false,bufsize);
   else
@@ -1345,7 +1347,7 @@ function( arg )
   fi;
 
   if append then
-      fd := IO_open(filename,IO.O_WRONLY + IO.O_APPEND,
+      fd := IO_open(filename,IO.O_CREAT + IO.O_WRONLY + IO.O_APPEND,
                     IO.S_IRUSR+IO.S_IWUSR+IO.S_IRGRP+IO.S_IWGRP+
                     IO.S_IROTH+IO.S_IWOTH);
   else
@@ -1422,7 +1424,7 @@ function(arg)
                         IO.S_IRUSR+IO.S_IWUSR+IO.S_IRGRP+IO.S_IWGRP+
                         IO.S_IROTH+IO.S_IWOTH);
       else
-          fd := IO_open(filename,IO.O_WRONLY + IO.O_APPEND,
+          fd := IO_open(filename,IO.O_CREAT+IO.O_WRONLY + IO.O_APPEND,
                         IO.S_IRUSR+IO.S_IWUSR+IO.S_IRGRP+IO.S_IWGRP+
                         IO.S_IROTH+IO.S_IWOTH);
       fi;
